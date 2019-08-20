@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Animated } from 'react-native';
+import React, { Component } from 'react'
+import { Animated } from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
-import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler';
-import southAmerica from '../assets/southAmerica.jpg';
+import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler'
+import southAmerica from '../assets/southAmerica.jpg'
 
 export class ZoomBox extends Component {
   baseScale = new Animated.Value(1)
@@ -24,7 +24,8 @@ export class ZoomBox extends Component {
     return(
       <PinchGestureHandler
         onGestureEvent={this.onPinchGestureEvent}
-        onHandlerStateChange={this.onPinchHandlerStateChange}>
+        onHandlerStateChange={this.onPinchHandlerStateChange}
+      >
         <Animated.View
           style={[{
             height: hp('100%'),
@@ -38,8 +39,8 @@ export class ZoomBox extends Component {
             },
           ]}
         >
-        <DraggableBox/>
-      </Animated.View>
+          <DraggableBox/>
+        </Animated.View>
       </PinchGestureHandler>
     )
   }
@@ -95,7 +96,7 @@ export class DraggableBox extends Component {
           ]}
         />
       </PanGestureHandler>
-    );
+    )
   }
 }
 
@@ -103,6 +104,6 @@ export default class ImageHandler extends Component {
   render() {
     return (
       <ZoomBox/>
-    );
+    )
   }
 }
