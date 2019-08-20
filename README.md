@@ -1,2 +1,2 @@
 # imageHandler
-Image Handler
+There are two functions available until now: Pan and Zoom.
