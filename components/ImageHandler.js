@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Animated } from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler'
-import southAmerica from '../assets/southAmerica.jpg'
 
 export class ZoomBox extends Component {
+  static propTypes = {
+    imageUri: PropTypes.any.isRequired,
+  }
   baseScale = new Animated.Value(1)
   pinchScale = new Animated.Value(1)
   scale = Animated.multiply(this.baseScale, this.pinchScale)
@@ -39,7 +42,7 @@ export class ZoomBox extends Component {
             },
           ]}
         >
-          <DraggableBox/>
+          <DraggableBox imageUri={this.props.imageUri}/>
         </Animated.View>
       </PinchGestureHandler>
     )
@@ -47,6 +50,9 @@ export class ZoomBox extends Component {
 }
 
 export class DraggableBox extends Component {
+  static propTypes = {
+    imageUri: PropTypes.any.isRequired,
+  }
   translateX = new Animated.Value(0)
   translateY = new Animated.Value(0)
   lastOffset = { x: 0, y: 0 }
@@ -78,7 +84,7 @@ export class DraggableBox extends Component {
         onGestureEvent={this.onGestureEvent}
         onHandlerStateChange={this.onHandlerStateChange}>
         <Animated.Image
-          source={southAmerica}
+          source={this.props.imageUri}
           style={[
             {
               width: wp('100%'),
@@ -101,9 +107,12 @@ export class DraggableBox extends Component {
 }
 
 export default class ImageHandler extends Component {
+  static propTypes = {
+    imageUri: PropTypes.any.isRequired,
+  }
   render() {
     return (
-      <ZoomBox/>
+      <ZoomBox imageUri={this.props.imageUri}/>
     )
   }
 }
