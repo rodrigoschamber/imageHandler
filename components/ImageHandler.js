@@ -6,6 +6,8 @@ import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gest
   
 export default class ImageHandler extends Component {
   static propTypes = {
+    containerStyle: PropTypes.object.isRequired,
+    imageStyle: PropTypes.object.isRequired,
     imageUri: PropTypes.any.isRequired,
   }
   panRef = React.createRef();
@@ -60,10 +62,8 @@ export default class ImageHandler extends Component {
         simultaneousHandlers={this.panRef}
       >
         <Animated.View
-          style={[{
-            height: hp('100%'),
-            width: wp('100%'),
-            backgroundColor: '#ffffff'},
+          style={[
+            this.props.containerStyle,
             {
               transform: [
                 { perspective: 200 },
@@ -82,12 +82,7 @@ export default class ImageHandler extends Component {
             <Animated.Image
               source={this.props.imageUri}
               style={[
-                {
-                  width: wp('100%'),
-                  height: hp('65.96%'),
-                  alignSelf: 'center',
-                  backgroundColor: 'plum',
-                },
+                this.props.imageStyle,
                 {
                   transform: [
                     { translateX: this.translateX },
