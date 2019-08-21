@@ -5,11 +5,12 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler'
   
 export default class ImageHandler extends Component {
-  panRef = React.createRef();
-  pinchRef = React.createRef();
   static propTypes = {
     imageUri: PropTypes.any.isRequired,
   }
+  panRef = React.createRef();
+  pinchRef = React.createRef();
+  //Pinch gesture handler
   baseScale = new Animated.Value(1)
   pinchScale = new Animated.Value(1)
   scale = Animated.multiply(this.baseScale, this.pinchScale)
@@ -18,6 +19,7 @@ export default class ImageHandler extends Component {
     [{ nativeEvent: { scale: this.pinchScale } }],
     { useNativeDriver: true }
   )
+  //Pan gesture handler
   translateX = new Animated.Value(0)
   translateY = new Animated.Value(0)
   lastOffset = { x: 0, y: 0 }
