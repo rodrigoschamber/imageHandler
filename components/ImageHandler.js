@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import { Animated } from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler'
-
-export class ZoomBox extends Component {
+  
+export default class ImageHandler extends Component {
+  panRef = React.createRef();
+  pinchRef = React.createRef();
   static propTypes = {
     imageUri: PropTypes.any.isRequired,
   }
@@ -16,6 +18,30 @@ export class ZoomBox extends Component {
     [{ nativeEvent: { scale: this.pinchScale } }],
     { useNativeDriver: true }
   )
+  translateX = new Animated.Value(0)
+  translateY = new Animated.Value(0)
+  lastOffset = { x: 0, y: 0 }
+  onPanGestureEvent = Animated.event(
+    [
+      {
+        nativeEvent: {
+          translationX: this.translateX,
+          translationY: this.translateY,
+        },
+      },
+    ],
+    { useNativeDriver: true }
+  )
+  onPanHandlerStateChange = event => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      this.lastOffset.x += event.nativeEvent.translationX
+      this.lastOffset.y += event.nativeEvent.translationY
+      this.translateX.setOffset(this.lastOffset.x)
+      this.translateX.setValue(0)
+      this.translateY.setOffset(this.lastOffset.y)
+      this.translateY.setValue(0)
+    }
+  }
   onPinchHandlerStateChange = event => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       this.lastScale *= event.nativeEvent.scale
@@ -24,10 +50,12 @@ export class ZoomBox extends Component {
     }
   }
   render() {
-    return(
+    return (
       <PinchGestureHandler
         onGestureEvent={this.onPinchGestureEvent}
         onHandlerStateChange={this.onPinchHandlerStateChange}
+        ref={this.pinchRef}
+        simultaneousHandlers={this.panRef}
       >
         <Animated.View
           style={[{
@@ -42,77 +70,34 @@ export class ZoomBox extends Component {
             },
           ]}
         >
-          <DraggableBox imageUri={this.props.imageUri}/>
+          <PanGestureHandler
+            {...this.props}
+            onGestureEvent={this.onPanGestureEvent}
+            onHandlerStateChange={this.onPanHandlerStateChange}
+            ref={this.panRef}
+            simultaneousHandlers={this.pinchRef}
+          >
+            <Animated.Image
+              source={this.props.imageUri}
+              style={[
+                {
+                  width: wp('100%'),
+                  height: hp('65.96%'),
+                  alignSelf: 'center',
+                  backgroundColor: 'plum',
+                },
+                {
+                  transform: [
+                    { translateX: this.translateX },
+                    { translateY: this.translateY },
+                  ],
+                },
+                this.props.boxStyle,
+              ]}
+            />
+          </PanGestureHandler>
         </Animated.View>
       </PinchGestureHandler>
-    )
-  }
-}
-
-export class DraggableBox extends Component {
-  static propTypes = {
-    imageUri: PropTypes.any.isRequired,
-  }
-  translateX = new Animated.Value(0)
-  translateY = new Animated.Value(0)
-  lastOffset = { x: 0, y: 0 }
-  onGestureEvent = Animated.event(
-    [
-      {
-        nativeEvent: {
-          translationX: this.translateX,
-          translationY: this.translateY,
-        },
-      },
-    ],
-    { useNativeDriver: true }
-  )
-  onHandlerStateChange = event => {
-    if (event.nativeEvent.oldState === State.ACTIVE) {
-      this.lastOffset.x += event.nativeEvent.translationX
-      this.lastOffset.y += event.nativeEvent.translationY
-      this.translateX.setOffset(this.lastOffset.x)
-      this.translateX.setValue(0)
-      this.translateY.setOffset(this.lastOffset.y)
-      this.translateY.setValue(0)
-    }
-  }
-  render() {
-    return (
-      <PanGestureHandler
-        {...this.props}
-        onGestureEvent={this.onGestureEvent}
-        onHandlerStateChange={this.onHandlerStateChange}>
-        <Animated.Image
-          source={this.props.imageUri}
-          style={[
-            {
-              width: wp('100%'),
-              height: hp('65.96%'),
-              alignSelf: 'center',
-              backgroundColor: 'plum',
-            },
-            {
-              transform: [
-                { translateX: this.translateX },
-                { translateY: this.translateY },
-              ],
-            },
-            this.props.boxStyle,
-          ]}
-        />
-      </PanGestureHandler>
-    )
-  }
-}
-
-export default class ImageHandler extends Component {
-  static propTypes = {
-    imageUri: PropTypes.any.isRequired,
-  }
-  render() {
-    return (
-      <ZoomBox imageUri={this.props.imageUri}/>
     )
   }
 }
