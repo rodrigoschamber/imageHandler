@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Animated } from 'react-native'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import { PanGestureHandler, PinchGestureHandler, State } from 'react-native-gesture-handler'
   
 export default class ImageHandler extends Component {
