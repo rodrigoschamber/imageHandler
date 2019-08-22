@@ -53,6 +53,15 @@ export default class ImageHandler extends Component {
     }
   }
   render() {
+    function validURL(str) {
+      let pattern = new RegExp('^(https?:\\/\\/)?'+
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+
+        '(\\#[-a-z\\d_]*)?$','i')
+      return !!pattern.test(str)
+    }
     return (
       <PinchGestureHandler
         onGestureEvent={this.onPinchGestureEvent}
@@ -79,7 +88,7 @@ export default class ImageHandler extends Component {
             simultaneousHandlers={this.pinchRef}
           >
             <Animated.Image
-              source={this.props.imageUri}
+              source={(validURL(this.props.imageUri)) ? {uri:this.props.imageUri} : this.props.imageUri}
               style={[
                 this.props.imageStyle,
                 {

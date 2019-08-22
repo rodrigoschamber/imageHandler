@@ -7,15 +7,15 @@ export default function App() {
   return (
     <ImageHandler
       containerStyle={{
+        backgroundColor: '#ffffff',
         height: hp('100%'),
         width: wp('100%'),
-        backgroundColor: '#ffffff'
       }}
       imageStyle={{
-        width: wp('100%'),
-        height: hp('65.96%'),
         alignSelf: 'center',
         backgroundColor: 'plum',
+        height: hp('65.96%'),
+        width: wp('100%'),
       }}
       imageUri={southAmerica}
     />
